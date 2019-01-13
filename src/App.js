@@ -1,27 +1,20 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import FileExplorer from "./components/FileExplorer";
+import "./App.css";
 
 class App extends Component {
+  //on component did mount need to make the call to API for initial rendering
+  // state = {
+  //   tree: [
+  //     { name: "dir1", type: "directory" },
+  //     { name: "dir2", type: "directory" },
+  //     { name: "file", type: "file" }
+  //   ]
+  // };
+
   render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
+    // const { tree } = this.state;
+    return <FileExplorer />;
   }
 }
 
