@@ -1,20 +1,31 @@
 import React, { Component } from "react";
-import FileExplorer from "./components/FileExplorer";
+import styled, { ThemeProvider } from "styled-components";
+import Routes from "./pages/Routes";
 import "./App.css";
+import { theme } from "./Theme";
+
+const AppWrapper = styled.div`
+  font-size: 14px;
+`;
+
+const ContentWrapper = styled.div`
+  height: 100%;
+  min-height: 100vh;
+  background-color: #f2f2f2;
+  padding: 24px;
+`;
 
 class App extends Component {
-  //on component did mount need to make the call to API for initial rendering
-  // state = {
-  //   tree: [
-  //     { name: "dir1", type: "directory" },
-  //     { name: "dir2", type: "directory" },
-  //     { name: "file", type: "file" }
-  //   ]
-  // };
-
   render() {
-    // const { tree } = this.state;
-    return <FileExplorer />;
+    return (
+      <ThemeProvider theme={theme}>
+        <AppWrapper>
+          <ContentWrapper>
+            <Routes />
+          </ContentWrapper>
+        </AppWrapper>
+      </ThemeProvider>
+    );
   }
 }
 

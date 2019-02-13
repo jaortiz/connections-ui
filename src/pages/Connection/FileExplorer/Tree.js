@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import values from "lodash/values";
-import PropTypes from "prop-types";
+import merge from "lodash/merge";
+// import PropTypes from "prop-types";
 import axios from "axios";
 import TreeNode from "./TreeNode";
 
@@ -9,11 +10,13 @@ const data = {
     path: "/",
     type: "folder",
     isRoot: true,
+    fileSize: "-",
+    lastModified: "-",
     children: []
   }
 };
 
-export default class Tree extends Component {
+class Tree extends Component {
   state = {
     nodes: data
   };
@@ -29,19 +32,30 @@ export default class Tree extends Component {
     return node.children.map(path => nodes[path]);
   };
 
+  // api needs to take in host, path, username, password
   getDirectory = async path => {
-    const res = await axios.get(`http://localhost:8000/api/datasource${path}`);
+    const { sftpCredentials } = this.props;
+    const res = await axios.post(
+      `http://localhost:5000/api/connection/directory`,
+      {
+        ...sftpCredentials,
+        path
+      }
+    );
     const { data } = await res;
     return data;
   };
 
   onToggle = async node => {
-    if (node.type === "folder") {
-      const { nodes } = this.state;
+    const { nodes } = this.state;
+    if (node.type === "folder" && !node.isOpen) {
       const data = await this.getDirectory(node.path);
-      const updatedNodes = Object.assign(nodes, data);
+      const updatedNodes = await merge(nodes, data);
       updatedNodes[node.path].isOpen = !node.isOpen;
       this.setState({ nodes: updatedNodes });
+    } else {
+      nodes[node.path].isOpen = !node.isOpen;
+      this.setState(nodes);
     }
   };
 
@@ -53,7 +67,7 @@ export default class Tree extends Component {
   render() {
     const rootNodes = this.getRootNodes();
     return (
-      <div>
+      <React.Fragment>
         {rootNodes.map(node => (
           <TreeNode
             key={node.path}
@@ -63,11 +77,9 @@ export default class Tree extends Component {
             onNodeSelect={this.onNodeSelect}
           />
         ))}
-      </div>
+      </React.Fragment>
     );
   }
 }
 
-Tree.propTypes = {
-  onSelect: PropTypes.func.isRequired
-};
+export default Tree;

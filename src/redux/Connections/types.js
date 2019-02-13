@@ -1,0 +1,3 @@
+const ADD_CONNECTION = "ADD_CONNECTION";
+const ADD_SFTP = "ADD_SFTP";
+export default { ADD_CONNECTION, ADD_SFTP };
